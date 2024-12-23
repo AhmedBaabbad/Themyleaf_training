@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Secured Content</title>
+
+  <!-- External Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link th:href="@{/css/custom.css}" rel="stylesheet" media="screen"/>
+
+  <!-- External JS Libraries -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" th:src="@{/js/jquery.slim.min.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <style>
+    /* Add your custom styles here */
+
+    /* Position the logout button at the top-left corner */
+    .logout-btn-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+    }
+
+    /* Custom button style */
+    .btn-custom {
+      background-color: #007bff; /* New background color */
+      color: white;
+      font-size: 1.1rem;
+      padding: 12px 24px;
+      border-radius: 30px; /* Rounded corners */
+      border: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .btn-custom:hover {
+      background-color: #0056b3; /* Darker shade on hover */
+      transform: scale(1.05);
+    }
+
+    /* Pattern background for button */
+    .btn-custom::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://www.transparenttextures.com/patterns/asfalt-light.png'); /* Pattern image */
+      z-index: -1;
+      opacity: 0.2; /* Light opacity for subtle effect */
+    }
+
+    /* Additional styling for the page */
+    .jumbotron {
+      background: linear-gradient(45deg, #f06, #4a90e2);
+      color: white;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px 0;
+      background-color: #333;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Logout Button in Top Left Corner -->
+<div class="logout-btn-container">
+  <form action="#" method="post" th:action="@{/logout-success}">
+    <button type="submit" class="btn-custom">Logout</button>
+  </form>
+</div>
+
+<!-- Jumbotron for Visual Appeal -->
+<div class="jumbotron text-center">
+  <h1>Welcome to the Spring Security Demo</h1>
+  <p class="lead">This page demonstrates secure content visibility based on user authentication and roles.</p>
+</div>
+
+<div class="container">
+  <!-- Secured Content: User Logged In -->
+  <div class="row" sec:authorize="isAuthenticated()">
+    <div class="col-md-10 offset-md-1">
+      <div class="card">
+        <div class="card-header">
+          <h2>User Logged In</h2>
+        </div>
+        <div class="card-body">
+          <p><strong>Username:</strong> <span sec:authentication="principal.username">userName</span></p>
+          <button class="btn-custom">Proceed to Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secured Content: User Logged Out -->
+  <div class="row" sec:authorize="!isAuthenticated()">
+    <div class="col-md-10 offset-md-1">
+      <div class="card">
+        <div class="card-header">
+          <h2>User Logged Out</h2>
+        </div>
+        <div class="card-body">
+          <p>You are currently not logged in. Please log in to access the secured content.</p>
+          <button class="btn-custom">Login Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Role: Admin -->
+  <div class="row" sec:authorize="hasRole('ROLE_ADMIN')">
+    <div class="col-md-10 offset-md-1">
+      <div class="card">
+        <div class="card-header">
+          <h2>Admin Role</h2>
+        </div>
+        <div class="card-body">
+          <p>You have administrative privileges.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Role: User -->
+  <div class="row" sec:authorize="hasRole('ROLE_USER')">
+    <div class="col-md-10 offset-md-1">
+      <div class="card">
+        <div class="card-header">
+          <h2>User Role</h2>
+        </div>
+        <div class="card-body">
+          <p>You have user access.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>&copy; 2024 Spring Security Demo. All Rights Reserved.</p>
+</div>
+
+</body>
+</html>
